@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Guesting | Hotel Database Manager</title>
+        <h:outputStylesheet library="css" name="estilo.css" />
+    </h:head>
+    <h:body>
+        <div id="wrapper">
+            <div id="header-wrapper">
+                <ui:insert name="top">
+                    <div id="header">
+                        <div id="logo">
+                            <h1>Guesting</h1>
+                        </div>
+                        <nav id="menu">
+                            <h:form>
+                                <ul>
+                                    <li><h:commandLink action="index">Inicio</h:commandLink></li>
+                                    <li><h:commandLink action="listarClientes">Listar Clientes</h:commandLink></li>
+                                    <li><h:commandLink action="listarHabitaciones">Listar Habitaciones</h:commandLink></li>
+                                    <li><h:commandLink action="listarReservaciones">Listar Reservaciones</h:commandLink></li>
+                                </ul>
+                            </h:form>
+                        </nav>
+                    </div>
+                </ui:insert>
+            </div>
+            <div id="page">
+                <ui:insert name="content">Contenido</ui:insert>
+            </div>
+            <div id="footer">
+                <p><ui:insert name="botoom">Derechos Reservados: InfoTech</ui:insert></p>
+            </div>
+        </div>
+    </h:body>
+</html>

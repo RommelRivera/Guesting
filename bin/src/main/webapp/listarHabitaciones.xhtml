@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Listar Habitaciones</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="./WEB-INF/plantillas/plantilla.xhtml">
+            <ui:define name="content">
+                <h:form id="habitacionesListForm">
+                    <p:growl id="messages" showDetail="true" />
+                    <p:messages/>
+                    <p:dataTable id="habitacionesDataTable" value="#{habitacionBean.habitaciones}" var="habitacion"
+                                 editable="true" selection="#{habitacionBean.habitacionSeleccionado}" widgetVar="habitacionesTable"
+                                 filteredValue="#{habitacionBean.habitacionesFiltradas}" selectionMode="single" rowKey="#{habitacion.idHabitacion}">
+                        <f:facet name="header">
+                            Listado de Habitaciones
+                            <p:spacer width="50px" height="5px"/><p:commandButton value="Generar Reporte"
+                                             actionListener="#{habitacionReportBean.reiniciarHabitacionSeleccionada()}"
+                                             update=":dialogReportForm" oncomplete="PF('habitacionReportDialog').show()"/>
+                        </f:facet>
+                        <p:column headerText="Id">
+                            <h:outputText value="#{habitacion.idHabitacion}"/>
+                        </p:column>
+                        <p:column headerText="Número de Habitación" filterBy="#{habitacion.numHabitacion}">
+                            <h:outputText value="#{habitacion.numHabitacion}"/>
+                        </p:column>
+                        <p:column headerText="Precio de Habitación" filterBy="#{habitacion.precioHabitacion.precio}">
+                            <h:outputText value="$#{habitacion.precioHabitacion.precio}"/>
+                        </p:column>
+                        <p:column headerText="Servicios de Habitación" filterBy="#{habitacion.tipoHabitacion.nombreHabitacion}">
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('habitacionesTable').filter()">
+                                    <f:selectItem itemLabel="Seleccione un grupo de servicios" itemValue="#{null}" noSelectionOption="true"/>
+                                    <f:selectItems value="#{habitacionBean.nombreHabitacion}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <h:outputText value="#{habitacion.tipoHabitacion.nombreHabitacion}"/>
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton value="Regresar" action="index"/>
+                            <p:spacer height="5px"/>
+                        </f:facet>
+                    </p:dataTable>
+                </h:form>
+                <p:dialog id="habitacionReportDlg" widgetVar="habitacionReportDialog" header="Generar Reporte"
+                          modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <h:form id="dialogReportForm" target="_blank">
+                        <p:outputPanel id="habitacionDetail" style="text-align: center">
+                            <p:panelGrid id="display" columns="4" columnClasses="label,value">
+                                <h:outputText value="Número de Habitación"/>
+                                <h:inputText value="#{habitacionReportBean.habitacionSeleccionada.numHabitacion}"/>
+                                <h:outputText value="Servicios de Habitación"/>
+                                <h:inputText value="#{habitacionReportBean.tipoHabitacionSeleccionada.nombreHabitacion}"/>
+                                <f:facet name="footer">
+                                    <h:commandButton value="Generar Reporte" actionListener="#{habitacionReportBean.printPDF()}"/>
+                                </f:facet>
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </h:form>
+                </p:dialog>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

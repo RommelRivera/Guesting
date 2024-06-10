@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Listar Clientes</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="./WEB-INF/plantillas/plantilla.xhtml">
+            <ui:define name="content">
+                <h:form id="clientesListForm">
+                    <p:growl id="messages" showDetail="true" />
+                    <p:messages/>
+                    <p:dataTable id="clientesDataTable" value="#{clienteBean.clientes}" var="cliente"
+                                 editable="true" selection="#{clienteBean.clienteSeleccionado}" widgetVar="reservacionTable"
+                                 filteredValue="#{clienteBean.clientesFiltrados}" selectionMode="single" rowKey="#{cliente.idCliente}">
+                        <f:facet name="header">
+                            Listado de Clientes
+                            <p:spacer width="50px" height="5px"/><p:commandButton value="Generar Reporte"
+                                             actionListener="#{clienteReportBean.reiniciarClienteSeleccionado()}"
+                                             update=":dialogReportForm" oncomplete="PF('clienteReportDialog').show()"/>
+                        </f:facet>
+                        <p:column headerText="Id">
+                            <h:outputText value="#{cliente.idCliente}"/>
+                        </p:column>
+                        <p:column headerText="Nombres" filterBy="#{cliente.nombres}">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{cliente.nombres}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <h:inputText value="#{cliente.nombres}"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Apellidos" filterBy="#{cliente.apellidos}">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{cliente.apellidos}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <h:inputText value="#{cliente.apellidos}"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Doc. de Identidad" filterBy="#{cliente.docIdentidad}">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{cliente.docIdentidad}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <h:inputText value="#{cliente.docIdentidad}"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Correo"  filterBy="#{cliente.correo}">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="$#{cliente.correo}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <h:inputText value="#{cliente.correo}"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Teléfono" filterBy="#{cliente.telefono}">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{cliente.telefono}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <h:inputText value="#{cliente.telefono}"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Tarjeta" filterBy="#{cliente.tarjeta}">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{cliente.tarjeta}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <h:inputText value="#{cliente.tarjeta}"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton value="Regresar" action="index"/>
+                            <p:spacer height="5px"/>
+                            <p:commandButton value="Agregar"
+                                             actionListener="#{clienteBean.reiniciarClienteSeleccionado()}"
+                                             update=":dialogForm" oncomplete="PF('clienteDialog').show()"/>
+                        </f:facet>
+                        <p:column headerText="Opciones">
+                            <p:rowEditor/>
+                        </p:column>
+                        <p:ajax event="rowEdit" listener="#{clienteBean.editListener}"/>
+                    </p:dataTable>
+                    <p:contextMenu for="clientesDataTable">
+                        <p:menuitem value="Eliminar" update="clientesListForm:clientesDataTable"
+                                    icon="ui-icon-close" actionListener="#{clienteBean.eliminarCliente()}"/>
+                    </p:contextMenu>
+                </h:form>
+                <p:dialog id="clienteDlg" widgetVar="clienteDialog" header="Agregar Cliente"
+                          modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <h:form id="dialogForm">
+                        <p:outputPanel id="clienteDetail" style="text-align: center">
+                            <p:panelGrid id="display" columns="4" columnClasses="label,value">
+                                <h:outputText value="Nombres"/>
+                                <p:inputText value="#{clienteBean.clienteSeleccionado.nombres}"/>
+                                <h:outputText value="Apellidos"/>
+                                <p:inputText value="#{clienteBean.clienteSeleccionado.apellidos}"/>
+                                <h:outputText value="Doc. de Identidad"/>
+                                <h:inputText value="#{clienteBean.clienteSeleccionado.docIdentidad}"/>
+                                <h:outputText value="Correo"/>
+                                <h:inputText value="#{clienteBean.clienteSeleccionado.correo}"/>
+                                <h:outputText value="Teléfono"/>
+                                <h:inputText value="#{clienteBean.clienteSeleccionado.telefono}"/>
+                                <h:outputText value="Tarjeta"/>
+                                <h:inputText value="#{clienteBean.clienteSeleccionado.tarjeta}"/>
+                                <f:facet name="footer">
+                                    <p:commandButton value="Agregar"
+                                                     actionListener="#{clienteBean.agregarCliente()}"
+                                                     update="display,:clientesListForm:clientesDataTable"
+                                                     oncomplete="PF('clienteDialog').hide()"/>
+                                </f:facet>
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </h:form>
+                </p:dialog>
+                <p:dialog id="clienteReportDlg" widgetVar="clienteReportDialog" header="Generar Reporte"
+                          modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <h:form id="dialogReportForm" target="_blank">
+                        <p:outputPanel id="clienteDetail" style="text-align: center">
+                            <p:panelGrid id="display" columns="4" columnClasses="label,value">
+                                <h:outputText value="Nombres"/>
+                                <h:inputText value="#{clienteReportBean.clienteSeleccionado.nombres}"/>
+                                <h:outputText value="Apellidos"/>
+                                <h:inputText value="#{clienteReportBean.clienteSeleccionado.apellidos}"/>
+                                <h:outputText value="Doc. de Identidad"/>
+                                <h:inputText value="#{clienteReportBean.clienteSeleccionado.docIdentidad}"/>
+                                <h:outputText value="Correo"/>
+                                <h:inputText value="#{clienteReportBean.clienteSeleccionado.correo}"/>                                
+                                <f:facet name="footer">
+                                    <h:commandButton value="Generar Reporte" actionListener="#{clienteReportBean.printPDF()}"/>
+                                </f:facet>
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </h:form>
+                </p:dialog>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

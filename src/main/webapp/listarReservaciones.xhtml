@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Listar Reservaciones</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="./WEB-INF/plantillas/plantilla.xhtml">
+            <ui:define name="content">
+                <h:form id="reservacionesListForm">
+                    <p:growl id="messages" showDetail="true" />
+                    <p:messages/>
+                    <p:dataTable id="reservacionesDataTable" value="#{reservacionBean.reservaciones}" var="reservacion"
+                                 editable="true" selection="#{reservacionBean.reservacionSeleccionado}" widgetVar="reservacionTable"
+                                 filteredValue="#{reservacionBean.reservacionesFiltradas}" selectionMode="single" rowKey="#{reservacion.idReservacion}">
+                        <f:facet name="header">
+                            Listado de reservaciones
+                            <p:spacer width="50px" height="5px"/><p:commandButton value="Generar Reporte"
+                                             actionListener="#{reservacionReportBean.reiniciarReservacionSeleccionada()}"
+                                             update=":dialogReportForm" oncomplete="PF('reservacionReportDialog').show()"/>
+                            <p:spacer width="50px" height="5px"/><p:commandButton value="Generar Factura"
+                                             actionListener="#{reservacionReportBean.reiniciarReservacionSeleccionada()}"
+                                             update=":dialogFacturaForm" oncomplete="PF('reservacionFacturaDialog').show()"/>
+                        </f:facet>
+                        <p:column headerText="Id" style="width: 100px">
+                            <h:outputText value="#{reservacion.idReservacion}"/>
+                        </p:column>
+                        <p:column headerText="Fecha de Entrada" filterBy="#{reservacion.fechaEntrada}" style="width: 100px;">
+                            <f:facet name="filter">
+                                <p:datePicker value="#{reservacionBean.fecha}" onchange="PF('reservacionTable').filter()"
+                                              monthNavigator="true" yearNavigator="true" yearRange="2022:2099" appendTo="@(body)"/>
+                            </f:facet>
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputLabel value="#{reservacion.fechaEntrada}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:datePicker value="#{reservacion.fechaEntrada}" monthNavigator="true" yearNavigator="true" yearRange="2022:2099" appendTo="@(body)"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Fecha de Salida" filterBy="#{reservacion.fechaSalida}" style="width: 100px">
+                            <f:facet name="filter">
+                                <p:datePicker value="#{reservacionBean.fecha}" onchange="PF('reservacionTable').filter()"
+                                              monthNavigator="true" yearNavigator="true" yearRange="2022:2099" appendTo="@(body)"/>
+                            </f:facet>
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{reservacion.fechaSalida}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:datePicker value="#{reservacion.fechaSalida}" monthNavigator="true" yearNavigator="true" yearRange="2022:2099" appendTo="@(body)"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Número de Personas" filterBy="#{reservacion.personas}" style="width: 100px">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{reservacion.personas}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <h:inputText value="#{reservacion.personas}"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Total a Pagar"  filterBy="#{reservacion.total}" style="width: 100px">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="$#{reservacion.total}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <h:inputText value="#{reservacion.total}"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Doc. de Identidad del Cliente" filterBy="#{reservacion.cliente.docIdentidad}" style="width: 100px">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{reservacion.cliente.docIdentidad}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <h:inputText value="#{reservacion.cliente.docIdentidad}"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Habitación" filterBy="#{reservacion.habitacion.numHabitacion}" style="width: 100px">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{reservacion.habitacion.numHabitacion}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <h:inputText value="#{reservacion.habitacion.numHabitacion}"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Servicios" filterBy="#{reservacion.habitacion.tipoHabitacion.nombreHabitacion}" style="width: 100px">
+                            <f:facet name="filter">
+                                <p:selectOneMenu onchange="PF('reservacionTable').filter()">
+                                    <f:selectItem itemLabel="Seleccione un grupo de servicios" itemValue="#{null}" noSelectionOption="true"/>
+                                    <f:selectItems value="#{reservacionBean.nombreHabitacion}"/>
+                                </p:selectOneMenu>
+                            </f:facet>
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{reservacion.habitacion.tipoHabitacion.nombreHabitacion}"/>
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:selectOneMenu value="#{reservacionBean.nombre}">
+                                        <f:selectItem itemLabel="Seleccione un grupo de servicios" itemValue="#{null}" noSelectionOption="true"/>
+                                        <f:selectItems value="#{reservacionBean.nombreHabitacion}"/>
+                                    </p:selectOneMenu>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton value="Regresar" action="index"/>
+                            <p:spacer height="5px"/>
+                            <p:commandButton value="Agregar"
+                                             actionListener="#{reservacionBean.reiniciarReservacionSeleccionado()}"
+                                             update=":dialogForm" oncomplete="PF('reservacionDialog').show()"/>
+                        </f:facet>
+                        <p:column headerText="Opciones" style="width: 50px">
+                            <p:rowEditor/>
+                        </p:column>
+                        <p:ajax event="rowEdit" listener="#{reservacionBean.editListener}"/>
+                    </p:dataTable>
+                    <p:contextMenu for="reservacionesDataTable">
+                        <p:menuitem value="Eliminar" update="reservacionesListForm:reservacionesDataTable"
+                                    icon="ui-icon-close" actionListener="#{reservacionBean.eliminarReservacion()}"/>
+                    </p:contextMenu>
+                </h:form>
+                <p:dialog id="reservacionDlg" widgetVar="reservacionDialog" header="Agregar Reservacion"
+                          modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <h:form id="dialogForm">
+                        <p:outputPanel id="reservacionDetail" style="text-align: center">
+                            <p:panelGrid id="display" columns="4" columnClasses="label,value">
+                                <h:outputText value="Fecha de Entrada"/>
+                                <p:datePicker value="#{reservacionBean.reservacionSeleccionado.fechaEntrada}" monthNavigator="true" yearNavigator="true"
+                                              yearRange="2022:2099" appendTo="@(body)"/>
+                                <h:outputText value="Fecha de Salida"/>
+                                <p:datePicker value="#{reservacionBean.reservacionSeleccionado.fechaSalida}" monthNavigator="true" yearNavigator="true"
+                                              yearRange="2022:2099" appendTo="@(body)"/>
+                                <h:outputText value="Número de Personas"/>
+                                <h:inputText value="#{reservacionBean.reservacionSeleccionado.personas}"/>
+                                <h:outputText value="Doc. de Identidad del Cliente"/>
+                                <h:inputText value="#{reservacionBean.clienteSeleccionado.docIdentidad}"/>
+                                <h:outputText value="Habitación"/>
+                                <h:inputText value="#{reservacionBean.habitacionSeleccionada.numHabitacion}"/>
+                                <h:outputText value="Servicios"/>
+                                <p:selectOneMenu value="#{reservacionBean.nombre}">
+                                    <f:selectItem itemLabel="Seleccione un grupo de servicios" itemValue="#{null}" noSelectionOption="true"/>
+                                    <f:selectItems value="#{reservacionBean.nombreHabitacion}"/>
+                                </p:selectOneMenu>
+                                <f:facet name="footer">
+                                    <p:commandButton value="Agregar"
+                                                     actionListener="#{reservacionBean.agregarReservacion()}"
+                                                     update="display,:reservacionesListForm:reservacionesDataTable"
+                                                     oncomplete="PF('reservacionDialog').hide()"/>
+                                </f:facet>
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </h:form>
+                </p:dialog>
+                <p:dialog id="reservacionReportDlg" widgetVar="reservacionReportDialog" header="Generar Reporte"
+                          modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <h:form id="dialogReportForm" target="_blank">
+                        <p:outputPanel id="reservacionDetail" style="text-align: center">
+                            <p:panelGrid id="display" columns="4" columnClasses="label,value">
+                                <h:outputText value="Fecha de Entrada"/>
+                                <p:datePicker value="#{reservacionReportBean.reservacionSeleccionada.fechaEntrada}" monthNavigator="true" yearNavigator="true"
+                                              yearRange="2022:2099" appendTo="@(body)"/>
+                                <h:outputText value="Fecha de Salida"/>
+                                <p:datePicker value="#{reservacionReportBean.reservacionSeleccionada.fechaSalida}" monthNavigator="true" yearNavigator="true"
+                                              yearRange="2022:2099" appendTo="@(body)"/>
+                                <h:outputText value="Doc. de Identidad del Cliente"/>
+                                <h:inputText value="#{reservacionReportBean.clienteSeleccionado.docIdentidad}"/>
+                                <h:outputText value="Habitación"/>
+                                <h:inputText value="#{reservacionReportBean.habitacionSeleccionada.numHabitacion}"/>
+                                <f:facet name="footer">
+                                    <h:commandButton value="Generar Reporte" actionListener="#{reservacionReportBean.printPDF()}"/>
+                                </f:facet>
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </h:form>
+                </p:dialog>
+                <p:dialog id="reservacionFacturaDlg" widgetVar="reservacionFacturaDialog" header="Generar Factura"
+                          modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <h:form id="dialogFacturaForm" target="_blank">
+                        <p:outputPanel id="reservacionDetail" style="text-align: center">
+                            <p:panelGrid id="display" columns="4" columnClasses="label,value">
+                                <h:outputText value="Fecha de Entrada"/>
+                                <p:datePicker value="#{reservacionReportBean.reservacionSeleccionada.fechaEntrada}" monthNavigator="true" yearNavigator="true"
+                                              yearRange="2022:2099" appendTo="@(body)"/>
+                                <h:outputText value="Doc. de Identidad"/>
+                                <h:inputText value="#{reservacionReportBean.clienteSeleccionado.docIdentidad}"/>
+                                <f:facet name="footer">
+                                    <h:commandButton value="Generar Factura" actionListener="#{reservacionReportBean.printFacturaPDF()}"/>
+                                </f:facet>
+                            </p:panelGrid>
+                        </p:outputPanel>
+                    </h:form>
+                </p:dialog>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

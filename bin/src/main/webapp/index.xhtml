@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/XHtml.xhtml to edit this template
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+    <h:head>
+        <title>Inicio</title>
+    </h:head>
+    <h:body>
+        <ui:composition template="./WEB-INF/plantillas/plantilla.xhtml">
+            <ui:define name="content">
+                <div class="banner">
+                    <img src="resources/img/banner.jpg" class="img-responsive" width="100%" height="400px"/>
+                    <div class="welcome-message">
+                        <div class="wrap-info">
+                            <div class="information">
+                                <h3>Menú</h3>
+                                <hr width="500px"/>
+                                <h:form>
+                                    <br/><br/>
+                                    <h:commandLink action="listarClientes">Listar Clientes</h:commandLink>
+                                    <br/><br/><br/>
+                                    <h:commandLink action="listarHabitaciones">Listar Habitaciones</h:commandLink>
+                                    <br/><br/><br/>
+                                    <h:commandLink action="listarReservaciones">Listar Reservaciones</h:commandLink>
+                                </h:form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>
